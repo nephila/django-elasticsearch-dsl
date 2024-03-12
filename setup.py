@@ -39,7 +39,7 @@ setup(
     author='Sabricot',
     url='https://github.com/sabricot/django-elasticsearch-dsl',
     packages=[
-        'django_elasticsearch_dsl',
+        'django_opensearch_dsl',
     ],
     include_package_data=True,
     install_requires=[

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, absolute_import
 from datetime import datetime
 
-from elasticsearch_dsl import connections
+from opensearchpy.connection import connections
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from six.moves import input
@@ -9,7 +9,7 @@ from ...registries import registry
 
 
 class Command(BaseCommand):
-    help = 'Manage elasticsearch index.'
+    help = 'Manage opensearch index.'
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
@@ -21,28 +21,28 @@ class Command(BaseCommand):
             metavar='app[.model]',
             type=str,
             nargs='*',
-            help="Specify the model or app to be updated in elasticsearch"
+            help="Specify the model or app to be updated in opensearch"
         )
         parser.add_argument(
             '--create',
             action='store_const',
             dest='action',
             const='create',
-            help="Create the indices in elasticsearch"
+            help="Create the indices in opensearch"
         )
         parser.add_argument(
             '--populate',
             action='store_const',
             dest='action',
             const='populate',
-            help="Populate elasticsearch indices with models data"
+            help="Populate opensearch indices with models data"
         )
         parser.add_argument(
             '--delete',
             action='store_const',
             dest='action',
             const='delete',
-            help="Delete the indices in elasticsearch"
+            help="Delete the indices in opensearch"
         )
         parser.add_argument(
             '--rebuild',
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                 '--use-alias' args
             """
         )
-        parser.set_defaults(parallel=getattr(settings, 'ELASTICSEARCH_DSL_PARALLEL', False))
+        parser.set_defaults(parallel=getattr(settings, 'OPENSEARCH_DSL_PARALLEL', False))
         parser.add_argument(
             '--refresh',
             action='store_true',

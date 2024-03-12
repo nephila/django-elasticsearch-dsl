@@ -12,20 +12,20 @@ Install Django Elasticsearch DSL::
 
 Then add ``django_elasticsearch_dsl`` to the INSTALLED_APPS
 
-You must define ``ELASTICSEARCH_DSL`` in your django settings.
+You must define ``OPENSEARCH_DSL`` in your django settings.
 
 For example:
 
 .. code-block:: python
 
-    ELASTICSEARCH_DSL={
+    OPENSEARCH_DSL={
         'default': {
             'hosts': 'localhost:9200',
             'http_auth': ('username', 'password')
         }
     }
 
-``ELASTICSEARCH_DSL`` is then passed to ``elasticsearch-dsl-py.connections.configure`` (see here_).
+``OPENSEARCH_DSL`` is then passed to ``elasticsearch-dsl-py.connections.configure`` (see here_).
 
 .. _here: http://elasticsearch-dsl.readthedocs.io/en/stable/configuration.html#multiple-clusters
 
@@ -91,7 +91,7 @@ It is required to define ``Document`` class in  ``documents.py`` in your app dir
             # Configure how the index should be refreshed after an update.
             # See Elasticsearch documentation for supported options:
             # https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-refresh.html
-            # This per-Document setting overrides settings.ELASTICSEARCH_DSL_AUTO_REFRESH.
+            # This per-Document setting overrides settings.OPENSEARCH_DSL_AUTO_REFRESH.
             # auto_refresh = False
 
             # Paginate the django queryset used to populate the index with the specified size

@@ -5,11 +5,11 @@ from itertools import chain
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ImproperlyConfigured
-from elasticsearch_dsl import AttrDict
+from opensearchpy import AttrDict
 from six import itervalues, iterkeys, iteritems
 
-from django_elasticsearch_dsl.exceptions import RedeclaredFieldError
 from .apps import DEDConfig
+from .exceptions import RedeclaredFieldError
 
 
 class DocumentRegistry(object):
@@ -129,7 +129,7 @@ class DocumentRegistry(object):
 
     def update(self, instance, **kwargs):
         """
-        Update all the elasticsearch documents attached to this model (if their
+        Update all the opensearch documents attached to this model (if their
         ignore_signals flag allows it)
         """
         if not DEDConfig.autosync_enabled():
@@ -142,7 +142,7 @@ class DocumentRegistry(object):
 
     def delete(self, instance, **kwargs):
         """
-        Delete all the elasticsearch documents attached to this model (if their
+        Delete all the opensearch documents attached to this model (if their
         ignore_signals flag allows it)
         """
         self.update(instance, action="delete", **kwargs)

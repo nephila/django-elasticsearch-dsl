@@ -10,15 +10,13 @@ if django.VERSION < (4, 0):
     from django.utils.translation import ugettext_lazy as _
 else:
     from django.utils.translation import gettext_lazy as _
-from elasticsearch_dsl import GeoPoint, InnerDoc
+from opensearchpy import GeoPoint, InnerDoc
 from mock import patch, Mock
 
-from django_elasticsearch_dsl import fields
-from django_elasticsearch_dsl.documents import DocType
-from django_elasticsearch_dsl.exceptions import (ModelFieldNotMappedError,
-                                                 RedeclaredFieldError)
-from django_elasticsearch_dsl.registries import registry
-from tests import ES_MAJOR_VERSION
+from django_opensearch_dsl import fields
+from django_opensearch_dsl.documents import DocType
+from django_opensearch_dsl.exceptions import (ModelFieldNotMappedError, RedeclaredFieldError)
+from django_opensearch_dsl.registries import registry
 
 from .models import Article
 
@@ -72,10 +70,10 @@ class BaseDocTypeTestCase(object):
     @classmethod
     def setUpClass(cls):
         from django.conf import settings
-        if cls.TARGET_PROCESSOR != settings.ELASTICSEARCH_DSL_SIGNAL_PROCESSOR:
+        if cls.TARGET_PROCESSOR != settings.OPENSEARCH_DSL_SIGNAL_PROCESSOR:
             raise SkipTest(
                 "Skipped because {} is required, not {}".format(
-                    cls.TARGET_PROCESSOR, settings.ELASTICSEARCH_DSL_SIGNAL_PROCESSOR
+                    cls.TARGET_PROCESSOR, settings.OPENSEARCH_DSL_SIGNAL_PROCESSOR
                 )
             )
         super(BaseDocTypeTestCase,cls).setUpClass()
@@ -151,7 +149,7 @@ class BaseDocTypeTestCase(object):
             doc.to_field('manufacturer', Car._meta.get_field('manufacturer'))
 
     def test_mapping(self):
-        text_type = 'string' if ES_MAJOR_VERSION == 2 else 'text'
+        text_type = 'text'
 
         self.assertEqual(
             CarDocument._doc_type.mapping.to_dict(), {
@@ -253,7 +251,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         car = Car(name="Type 57", price=5400000.0,
                   not_indexed="not_indexex", pk=51)
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car)
             actions = [{
                 '_id': car.pk,
@@ -281,7 +279,7 @@ class BaseDocTypeTestCase(object):
                   not_indexed="not_indexex", pk=51)
         car2 = Car(name=_("Type 42"), price=50000.0,
                    not_indexed="not_indexex", pk=31)
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update([car, car2], action='update')
             actions = [{
                 '_id': car.pk,
@@ -318,7 +316,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         doc.django.auto_refresh = False
         car = Car()
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car)
             self.assertNotIn('refresh', mock.call_args_list[0][1])
 
@@ -326,7 +324,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         doc.django.auto_refresh = False
         car = Car()
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car, refresh=True)
             self.assertEqual(
                 mock.call_args_list[0][1]['refresh'], True
@@ -336,7 +334,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         doc.django.auto_refresh = False
         car = Car()
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car, refresh='wait_for')
             self.assertEqual(
                 mock.call_args_list[0][1]['refresh'], 'wait_for'
@@ -346,7 +344,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         doc.django.auto_refresh = 'wait_for'
         car = Car()
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car)
             self.assertEqual(
                 mock.call_args_list[0][1]['refresh'], 'wait_for'
@@ -356,7 +354,7 @@ class BaseDocTypeTestCase(object):
         doc = CarDocument()
         doc.django.auto_refresh = True
         car = Car()
-        with patch('django_elasticsearch_dsl.documents.bulk') as mock:
+        with patch('django_opensearch_dsl.documents.bulk') as mock:
             doc.update(car, refresh=False)
             self.assertEqual(
                 mock.call_args_list[0][1]['refresh'], False
@@ -373,8 +371,8 @@ class BaseDocTypeTestCase(object):
         car2 = Car()
         car3 = Car()
 
-        bulk = "django_elasticsearch_dsl.documents.bulk"
-        parallel_bulk = "django_elasticsearch_dsl.documents.parallel_bulk"
+        bulk = "django_opensearch_dsl.documents.bulk"
+        parallel_bulk = "django_opensearch_dsl.documents.parallel_bulk"
         with patch(bulk) as mock_bulk, patch(parallel_bulk) as mock_parallel_bulk:
             doc.update([car1, car2, car3])
             self.assertEqual(
@@ -393,8 +391,8 @@ class BaseDocTypeTestCase(object):
         car1 = Car()
         car2 = Car()
         car3 = Car()
-        bulk = "django_elasticsearch_dsl.documents.bulk"
-        parallel_bulk = "django_elasticsearch_dsl.documents.parallel_bulk"
+        bulk = "django_opensearch_dsl.documents.bulk"
+        parallel_bulk = "django_opensearch_dsl.documents.parallel_bulk"
         with patch(bulk) as mock_bulk, patch(parallel_bulk) as mock_parallel_bulk:
             doc.update([car1, car2, car3], parallel=True)
             self.assertEqual(mock_bulk.call_count, 0, "bulk is not called")
@@ -407,13 +405,13 @@ class BaseDocTypeTestCase(object):
         self.assertEqual(len(d._prepared_fields), 4)
 
         expect = {
-            'color': ("<class 'django_elasticsearch_dsl.fields.TextField'>",
+            'color': ("<class 'django_opensearch_dsl.fields.TextField'>",
                       ("<class 'method'>", "<type 'instancemethod'>")),  # py3, py2
-            'type': ("<class 'django_elasticsearch_dsl.fields.TextField'>",
+            'type': ("<class 'django_opensearch_dsl.fields.TextField'>",
                      ("<class 'functools.partial'>", "<type 'functools.partial'>")),
-            'name': ("<class 'django_elasticsearch_dsl.fields.TextField'>",
+            'name': ("<class 'django_opensearch_dsl.fields.TextField'>",
                      ("<class 'functools.partial'>", "<type 'functools.partial'>")),
-            'price': ("<class 'django_elasticsearch_dsl.fields.DoubleField'>",
+            'price': ("<class 'django_opensearch_dsl.fields.DoubleField'>",
                       ("<class 'functools.partial'>", "<type 'functools.partial'>")),
         }
 
@@ -451,9 +449,9 @@ class BaseDocTypeTestCase(object):
 
     # Mock the elasticsearch connection because we need to execute the bulk so that the generator
     # got iterated and generate_id called.
-    # If we mock the bulk in django_elasticsearch_dsl.document
+    # If we mock the bulk in django_opensearch_dsl.document
     # the actual bulk will be never called and the test will fail
-    @patch('elasticsearch_dsl.connections.Elasticsearch.bulk')
+    @patch('opensearchpy.OpenSearch.bulk')
     def test_default_generate_id_is_called(self, _):
         article = Article(
             id=124594,
@@ -481,7 +479,7 @@ class BaseDocTypeTestCase(object):
             d.update(article)
             patched_method.assert_called()
 
-    @patch('elasticsearch_dsl.connections.Elasticsearch.bulk')
+    @patch('opensearchpy.OpenSearch.bulk')
     def test_custom_generate_id_is_called(self, mock_bulk):
         article = Article(
             id=54218,
@@ -508,16 +506,16 @@ class BaseDocTypeTestCase(object):
 
         # Get the data from the elasticsearch low level API because
         # The generator get executed there.
-        data = json.loads(mock_bulk.call_args[1]['operations'][1])
+        data = json.loads(mock_bulk.call_args[0][0].split()[1])
         assert data['slug'] == article.slug
 
-    @patch('elasticsearch_dsl.connections.Elasticsearch.bulk')
+    @patch('opensearchpy.OpenSearch.bulk')
     def test_should_index_object_is_called(self, mock_bulk):
         doc = CarDocument()
         car1 = Car()
         car2 = Car()
         car3 = Car()
-        should_index_object = ("django_elasticsearch_dsl.documents."
+        should_index_object = ("django_opensearch_dsl.documents."
                                "DocType.should_index_object")
         with patch(should_index_object) as mock_should_index_object:
             doc.update([car1, car2, car3])
@@ -525,7 +523,7 @@ class BaseDocTypeTestCase(object):
             self.assertEqual(mock_should_index_object.call_count, 3,
                              "should_index_object is called")
 
-    @patch('elasticsearch_dsl.connections.Elasticsearch.bulk')
+    @patch('opensearchpy.OpenSearch.bulk')
     def test_should_index_object_working_perfectly(self, mock_bulk):
         article1 = Article(slug='article1')
         article2 = Article(slug='article2')
@@ -549,7 +547,7 @@ class BaseDocTypeTestCase(object):
 
         d = ArticleDocument()
         d.update([article1, article2])
-        operations = mock_bulk.call_args[1]['operations']
+        operations = mock_bulk.call_args[0][0].split()
         slugs = [
             json.loads(operation)['slug'] for operation in operations
             if 'slug' in json.loads(operation)
@@ -558,8 +556,8 @@ class BaseDocTypeTestCase(object):
         self.assertTrue(article2.slug not in slugs)
 
 class RealTimeDocTypeTestCase(BaseDocTypeTestCase, TestCase):
-    TARGET_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor'
+    TARGET_PROCESSOR = 'django_opensearch_dsl.signals.RealTimeSignalProcessor'
 
 
 class CeleryDocTypeTestCase(BaseDocTypeTestCase, TestCase):
-    TARGET_PROCESSOR = 'django_elasticsearch_dsl.signals.CelerySignalProcessor'
+    TARGET_PROCESSOR = 'django_opensearch_dsl.signals.CelerySignalProcessor'
