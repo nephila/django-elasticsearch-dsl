@@ -1,3 +1,4 @@
+from django.conf import settings
 from mock import DEFAULT, Mock, patch
 from unittest import TestCase
 

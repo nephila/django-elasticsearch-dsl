@@ -15,7 +15,7 @@ jobs:
       matrix:
         python-version: ["3.9", "3.11"]
         django-version: ["3.2", "4.2"]
-        open-dsl-version: ["2.1", "2.4"]
+        open-dsl-version: ["2.2", "2.4"]
 
         exclude:
           - python-version: "3.11"
@@ -53,8 +53,8 @@ jobs:
       - name: Run tests with Python ${{ matrix.python-version }} and Django ${{ matrix.django-version }} and opensearch-=py ${{ matrix.open-dsl-version }}
         run: |
           TOX_ENV=$(echo "py${{ matrix.python-version }}-django-${{ matrix.django-version }}-open${{ matrix.open-dsl-version }}" | tr -d .)
-          python -m tox -e $TOX_ENV -- --elasticsearch
-          python -m tox -e $TOX_ENV -- --elasticsearch --signal-processor celery
+          python -m tox -e $TOX_ENV -- --elasticsearch http://127.0.0.1:9200
+          python -m tox -e $TOX_ENV -- --elasticsearch http://127.0.0.1:9200 --signal-processor celery
 
       - name: Publish Coverage Report
         uses: codecov/codecov-action@v3
