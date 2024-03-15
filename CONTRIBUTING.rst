@@ -13,7 +13,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/sabricot/django-elasticsearch-dsl/issues.
+Report bugs at https://github.com/sabricot/django-opensearch-dsl/issues.
 
 If you are reporting a bug, please include:
 
@@ -43,7 +43,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/sabricot/django-elasticsearch-dsl/issues.
+The best way to send feedback is to file an issue at https://github.com/sabricot/django-opensearch-dsl/issues.
 
 If you are proposing a feature:
 
@@ -55,17 +55,17 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `django-elasticsearch-dsl` for local development.
+Ready to contribute? Here's how to set up `django-opensearch-dsl` for local development.
 
-1. Fork the `django-elasticsearch-dsl` repo on GitHub.
+1. Fork the `django-opensearch-dsl` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/django-elasticsearch-dsl.git
+    $ git clone git@github.com:your_name_here/django-opensearch-dsl.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv django-elasticsearch-dsl
-    $ cd django-elasticsearch-dsl/
+    $ mkvirtualenv django-opensearch-dsl
+    $ cd django-opensearch-dsl/
     $ python setup.py develop
 
 4. Create a branch for local development::
@@ -101,6 +101,6 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The pull request should work for Python 2.7, and 3.4, and for PyPy. Check
-   https://github.com/django-es/django-elasticsearch-dsl/actions
+   https://github.com/django-es/django-opensearch-dsl/actions
    and make sure that the tests pass for all supported Python versions.
 

@@ -5,11 +5,11 @@ We are glad to welcome any contributor.
 
 Report bugs or propose enhancements through  `github bug tracker`_
 
-_`github bug tracker`: https://github.com/sabricot/django-elasticsearch-dsl/issues
+_`github bug tracker`: https://github.com/sabricot/django-opensearch-dsl/issues
 
 
 If you want to contribute, the code is on github:
-https://github.com/sabricot/django-elasticsearch-dsl
+https://github.com/sabricot/django-opensearch-dsl
 
 Testing
 =======
@@ -27,7 +27,7 @@ For integration testing with a running Elasticsearch server::
 
 TODO
 ====
- 
+
 - Add support for --using (use another Elasticsearch cluster) in management commands.
 - Add management commands for mapping level operations (like update_mapping....).
 - Generate ObjectField/NestField properties from a Document class.
