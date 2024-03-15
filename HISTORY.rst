@@ -25,7 +25,7 @@ History
 ~~~~~~~~~~~~~~~~~~
 * Support for Django `DecimalField` #141
 * Indexing speedup by using `parallel` indexing. #213.
-  Now you can pass `--parallel` or set `ELASTICSEARCH_DSL_PARALLEL`
+  Now you can pass `--parallel` or set `OPENSEARCH_DSL_PARALLEL`
   in your settings to get indexing speed boost while indexing
   through management command.
 * Fixing name resolution in management command #206

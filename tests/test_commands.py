@@ -1,3 +1,4 @@
+from django.conf import settings
 from mock import DEFAULT, Mock, patch
 from unittest import TestCase
 
@@ -5,9 +6,9 @@ from django.core.management.base import CommandError
 from django.core.management import call_command
 from six import StringIO
 
-from django_elasticsearch_dsl import Index
-from django_elasticsearch_dsl.management.commands.search_index import Command
-from django_elasticsearch_dsl.registries import DocumentRegistry
+from django_opensearch_dsl import Index
+from django_opensearch_dsl.management.commands.search_index import Command
+from django_opensearch_dsl.registries import DocumentRegistry
 
 from .fixtures import WithFixturesMixin
 
@@ -16,7 +17,7 @@ class SearchIndexTestCase(WithFixturesMixin, TestCase):
     def _mock_setup(self):
         # Mock Patch object
         patch_registry = patch(
-            'django_elasticsearch_dsl.management.commands.search_index.registry', self.registry)
+            'django_opensearch_dsl.management.commands.search_index.registry', self.registry)
 
         patch_registry.start()
 
@@ -83,7 +84,7 @@ class SearchIndexTestCase(WithFixturesMixin, TestCase):
     def test_delete_foo_index(self):
 
         with patch(
-            'django_elasticsearch_dsl.management.commands.search_index.input',
+            'django_opensearch_dsl.management.commands.search_index.input',
             Mock(return_value="y")
         ):
             call_command('search_index', stdout=self.out,

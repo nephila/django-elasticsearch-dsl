@@ -4,16 +4,12 @@ import unittest
 import django
 from django.core.management import call_command
 from django.test import TestCase, TransactionTestCase
-if django.VERSION < (4, 0):
-    from django.utils.translation import ugettext_lazy as _
-else:
-    from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from six import StringIO
 
-from elasticsearch.exceptions import NotFoundError
-from elasticsearch_dsl import Index as DSLIndex
-from django_elasticsearch_dsl.test import ESTestCase, is_es_online
-from tests import ES_MAJOR_VERSION
+from opensearchpy.exceptions import NotFoundError
+from opensearchpy import Index as DSLIndex
+from django_opensearch_dsl.test import ESTestCase, is_es_online
 
 from .documents import (
     ad_index,
@@ -180,7 +176,7 @@ class IntegrationTestCase(ESTestCase, TransactionTestCase):
     def test_index_to_dict(self):
         self.maxDiff = None
         index_dict = car_index.to_dict()
-        text_type = 'string' if ES_MAJOR_VERSION == 2 else 'text'
+        text_type = 'text'
 
         test_index = DSLIndex('test_index').settings(**index_settings)
         test_index.document(CarDocument)

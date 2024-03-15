@@ -2,7 +2,7 @@
 Django Elasticsearch DSL Test App
 =================================
 
-Simple django app for test some django-elasticsearch-dsl features.
+Simple django app for test some django-opensearchpy-dsl features.
 
 
 Installation
@@ -18,7 +18,7 @@ connections setting in example/settings.py.
 
 .. code:: python
 
-    ELASTICSEARCH_DSL={
+    OPENSEARCH_DSL={
         'default': {
             'hosts': 'localhost:9200'
         },

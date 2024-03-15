@@ -11,17 +11,17 @@ try:
     def get_settings(signal_processor):
         elasticsearch_dsl_default_settings = {
             'hosts': os.environ.get(
-                'ELASTICSEARCH_URL',
+                'OPENSEARCH_URL',
                 'https://127.0.0.1:9200'
             ),
             'basic_auth': (
-                os.environ.get('ELASTICSEARCH_USERNAME'),
-                os.environ.get('ELASTICSEARCH_PASSWORD')
+                os.environ.get('OPENSEARCH_USERNAME'),
+                os.environ.get('OPENSEARCH_PASSWORD')
             )
         }
 
         elasticsearch_certs_path = os.environ.get(
-            'ELASTICSEARCH_CERTS_PATH'
+            'OPENSEARCH_CERTS_PATH'
         )
         if elasticsearch_certs_path:
             elasticsearch_dsl_default_settings['ca_certs'] = (
@@ -31,8 +31,8 @@ try:
             elasticsearch_dsl_default_settings['verify_certs'] = False
 
         PROCESSOR_CLASSES = {
-            'realtime': 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor',
-            'celery': 'django_elasticsearch_dsl.signals.CelerySignalProcessor',
+            'realtime': 'django_opensearch_dsl.signals.RealTimeSignalProcessor',
+            'celery': 'django_opensearch_dsl.signals.CelerySignalProcessor',
         }
 
         signal_processor = PROCESSOR_CLASSES[signal_processor]
@@ -48,19 +48,19 @@ try:
                 "django.contrib.auth",
                 "django.contrib.contenttypes",
                 "django.contrib.sites",
-                "django_elasticsearch_dsl",
+                "django_opensearch_dsl",
                 "tests",
             ],
             SITE_ID=1,
             MIDDLEWARE_CLASSES=(),
-            ELASTICSEARCH_DSL={
+            OPENSEARCH_DSL={
                 'default': elasticsearch_dsl_default_settings
             },
             DEFAULT_AUTO_FIELD="django.db.models.BigAutoField",
             CELERY_BROKER_URL='memory://localhost/',
             CELERY_TASK_ALWAYS_EAGER=True,
             CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
-            ELASTICSEARCH_DSL_SIGNAL_PROCESSOR=signal_processor
+            OPENSEARCH_DSL_SIGNAL_PROCESSOR=signal_processor
         )
 
         try:
@@ -120,20 +120,20 @@ def make_parser():
 def run_tests(*test_args):
     args, test_args = make_parser().parse_known_args(test_args)
     if args.elasticsearch:
-        os.environ.setdefault('ELASTICSEARCH_URL', "https://127.0.0.1:9200")
+        os.environ.setdefault('OPENSEARCH_URL', args.elasticsearch)
 
         username = args.elasticsearch_username or "elastic"
         password = args.elasticsearch_password or "changeme"
         os.environ.setdefault(
-            'ELASTICSEARCH_USERNAME', username
+            'OPENSEARCH_USERNAME', username
         )
         os.environ.setdefault(
-            'ELASTICSEARCH_PASSWORD', password
+            'OPENSEARCH_PASSWORD', password
         )
 
     if args.elasticsearch_certs_path:
         os.environ.setdefault(
-            'ELASTICSEARCH_CERTS_PATH', args.elasticsearch_certs_path
+            'OPENSEARCH_CERTS_PATH', args.elasticsearch_certs_path
         )
 
     if not test_args:

@@ -1,16 +1,12 @@
 from types import MethodType
 
-import django
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.fields.files import FieldFile
 
-if django.VERSION < (4, 0):
-    from django.utils.encoding import force_text as force_str
-else:
-    from django.utils.encoding import force_str
+from django.utils.encoding import force_str
 from django.utils.functional import Promise
-from elasticsearch_dsl.field import (
+from opensearchpy.helpers.field import (
     Boolean,
     Byte,
     Completion,

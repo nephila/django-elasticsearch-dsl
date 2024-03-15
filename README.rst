@@ -2,20 +2,20 @@
 Django Elasticsearch DSL
 ========================
 
-.. image:: https://github.com/django-es/django-elasticsearch-dsl/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/django-es/django-elasticsearch-dsl/actions/workflows/ci.yml
-.. image:: https://codecov.io/gh/django-es/django-elasticsearch-dsl/coverage.svg?branch=master
-    :target: https://codecov.io/gh/django-es/django-elasticsearch-dsl
-.. image:: https://badge.fury.io/py/django-elasticsearch-dsl.svg
-    :target: https://pypi.python.org/pypi/django-elasticsearch-dsl
-.. image:: https://readthedocs.org/projects/django-elasticsearch-dsl/badge/?version=latest&style=flat
-    :target: https://django-elasticsearch-dsl.readthedocs.io/en/latest/
+.. image:: https://github.com/django-es/django-opensearch-dsl/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/django-es/django-opensearch-dsl/actions/workflows/ci.yml
+.. image:: https://codecov.io/gh/django-es/django-opensearch-dsl/coverage.svg?branch=master
+    :target: https://codecov.io/gh/django-es/django-opensearch-dsl
+.. image:: https://badge.fury.io/py/django-opensearch-dsl.svg
+    :target: https://pypi.python.org/pypi/django-opensearch-dsl
+.. image:: https://readthedocs.org/projects/django-opensearch-dsl/badge/?version=latest&style=flat
+    :target: https://django-opensearch-dsl.readthedocs.io/en/latest/
 
 Django Elasticsearch DSL is a package that allows indexing of django models in elasticsearch.
 It is built as a thin wrapper around elasticsearch-dsl-py_
 so you can use all the features developed by the elasticsearch-dsl-py team.
 
-You can view the full documentation at https://django-elasticsearch-dsl.readthedocs.io
+You can view the full documentation at https://django-opensearch-dsl.readthedocs.io
 
 .. _elasticsearch-dsl-py: https://github.com/elastic/elasticsearch-dsl-py
 
